@@ -1,0 +1,11 @@
+you dont want to use this.. trust me..
+
+sudo python dnsfilter.py
+
+
+https://localhost:5000/ to add/remove hosts.. i never bothered implementing removing hosts
+
+there are no options.. there is no hope..
+
+
+

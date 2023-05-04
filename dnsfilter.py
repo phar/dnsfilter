@@ -46,11 +46,11 @@ class CustomResolver(BaseResolver):
 
 			ip_addresses = self.get_addr_list(str(qname))
 			
-			up,down = HOST_KBPS[requester_ip]
-			HOST_KBPS[requester_ip] = up + len(qname), down + (len(ip_addresses) * 4)
-			if LAST_BATCH_WINDOW < (time.time() - 60):
-				HOST_KBPS[requester_ip]  = 0,0
-				LAST_BATCH_WINDOW = time.time()
+#			up,down = HOST_KBPS[requester_ip]
+#			HOST_KBPS[requester_ip] = up + len(qname), down + (len(ip_addresses) * 4)
+#			if LAST_BATCH_WINDOW < (time.time() - 60):
+#				HOST_KBPS[requester_ip]  = 0,0
+#				LAST_BATCH_WINDOW = time.time()
 		
 			# Add a resource record for each IP address
 			for ip_address in ip_addresses:
