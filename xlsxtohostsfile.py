@@ -40,8 +40,8 @@ def resolve_hosts_from_excel(file_path, output_file_path):
 	#            resolved_hosts.append(f"{hostname} - Unable to resolve")
 			print(f"{hostname} - Unable to resolve")
 
-    # Write resolved hosts to a file
-    with open(output_file_path, "w") as file:
+	# Write resolved hosts to a file
+	with open(output_file_path, "w") as file:
 		for resolved_host in resolved_hosts:
 			file.write(resolved_host + "\n")
 
