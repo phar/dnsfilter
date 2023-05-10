@@ -37,7 +37,8 @@ def resolve_hosts_from_excel(file_path, output_file_path):
             ip_address = socket.gethostbyname(hostname)
             resolved_hosts.append(f"{hostname} - {ip_address}")
         except socket.gaierror:
-            resolved_hosts.append(f"{hostname} - Unable to resolve")
+#            resolved_hosts.append(f"{hostname} - Unable to resolve")
+			print(f"{hostname} - Unable to resolve")
 
     # Write resolved hosts to a file
     with open(output_file_path, "w") as file:
