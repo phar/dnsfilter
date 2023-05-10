@@ -1,5 +1,6 @@
 import openpyxl
 import socket
+import sys
 
 def resolve_hosts_from_excel(file_path, output_file_path):
     # Load the Excel file
@@ -46,7 +47,7 @@ def resolve_hosts_from_excel(file_path, output_file_path):
     print(f"Resolved hosts saved to {output_file_path}.")
 
 # Usage example
-input_file_path = "input.xlsx"
+input_file_path = sys.argv[1]
 output_file_path = "hosts.txt"
 
 resolve_hosts_from_excel(input_file_path, output_file_path)
