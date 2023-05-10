@@ -17,18 +17,14 @@ allowed_subdomains = []
 HOST_KBPS = {}
 LAST_BATCH_WINDOW = 0
 
-with open("allowed_subdomains.txt") as f:
-    for line in f:
-        allowed_subdomains.append(line.strip())
-
 
 def reload_allowed_subdomains():
 	global allowed_subdomains
 	with open("allowed_subdomains.txt") as f:
 		allowed_subdomains = []
 		for line in f:
-			allowed_subdomains.append(line.strip())
-			logging.info('added subdomain to allow list ' + line.strip())
+			allowed_subdomains.append(line.split(" ")[0].strip())
+			logging.info('added subdomain to allow list ' + line.split(" ")[0].strip())
 
 
 
@@ -53,8 +49,12 @@ class CustomResolver(BaseResolver):
 #				LAST_BATCH_WINDOW = time.time()
 		
 			# Add a resource record for each IP address
-			for ip_address in ip_addresses:
-				reply.add_answer(RR(qname, ttl=60, rdata=A(ip_address)))
+			if len(ip_addresses):
+				for ip_address in ip_addresses:
+					reply.add_answer(RR(qname, ttl=60, rdata=A(ip_address)))
+			else:
+				logging.info('unable to resolve allowed subdomain ' + str(qname))
+				reply.header.set_rcode(dnslib.RCODE.NXDOMAIN)
 		else:
 			logging.info('denied request for qname ' + str(qname))
 			reply.header.set_rcode(dnslib.RCODE.NXDOMAIN)
@@ -78,9 +78,12 @@ class CustomResolver(BaseResolver):
 	def get_addr_list(self,domain_name):
 		ip_addresses = []
 		if domain_name is not None:
-			addr_info = socket.getaddrinfo(domain_name, None, socket.AF_INET, socket.SOCK_STREAM)
-			for info in addr_info:
-				ip_addresses.append(info[4][0])
+			try:
+				addr_info = socket.getaddrinfo(domain_name, None, socket.AF_INET, socket.SOCK_STREAM)
+				for info in addr_info:
+					ip_addresses.append(info[4][0])
+			except socket.gaierror: #couldnt resolve an allowed host
+				pass
 		return ip_addresses
 
 
@@ -128,6 +131,14 @@ def del_subdomain():
             
 	return redirect("/")
 	
+	
+def resolve_hostname(hostname):
+    try:
+        ip_address = socket.gethostbyname(hostname)
+        return ip_address
+    except socket.gaierror:
+        return "127.0.0.1"
+        
 @app.route("/", methods=["POST"])
 def add_subdomain():
 	# Add the new subdomain to the list
@@ -136,7 +147,7 @@ def add_subdomain():
 		allowed_subdomains.append(new_subdomain)
 	#        # Write the updated list of allowed subdomains to file
 		with open("allowed_subdomains.txt", "a") as f:
-			f.write(f"{new_subdomain}\n")
+			f.write(f"{new_subdomain} - %s\n" % resolve_hostname(new_subdomain))
 		logging.info('added subdomain to allow list ' + new_subdomain)
 	# Redirect back to the home page
 	
@@ -147,12 +158,15 @@ def dummylog(arg):
 	pass
 
 
+
 logging.basicConfig(filename=OUTPUT_LOGFILE, filemode='a',format='%(asctime)s - %(message)s', level=logging.INFO)
 slogger = logging.StreamHandler()
 slogger.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 logging.getLogger().addHandler(slogger)
 
 logging.info('startup')
+
+reload_allowed_subdomains()
 
 resolver = CustomResolver()
 handler = DNSHandler
