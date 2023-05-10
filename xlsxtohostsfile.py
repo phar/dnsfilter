@@ -42,10 +42,10 @@ def resolve_hosts_from_excel(file_path, output_file_path):
 
     # Write resolved hosts to a file
     with open(output_file_path, "w") as file:
-        for resolved_host in resolved_hosts:
-            file.write(resolved_host + "\n")
+		for resolved_host in resolved_hosts:
+			file.write(resolved_host + "\n")
 
-    print(f"Resolved hosts saved to {output_file_path}.")
+	print(f"Resolved hosts saved to {output_file_path}.")
 
 # Usage example
 input_file_path = sys.argv[1]
