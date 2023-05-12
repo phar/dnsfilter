@@ -33,7 +33,7 @@ def resolve_hosts_from_excel(file_path, output_file_path):
 	# Resolve hostnames
 	resolved_hosts = []
 	for hostname in hostnames:
-		hosname.replace("*.","") #this works for the dns filter, just not the hosts file output
+		hostname.replace("*.","") #this works for the dns filter, just not the hosts file output
 		try:
 			ip_address = socket.gethostbyname(hostname)
 			resolved_hosts.append(f"{hostname} - {ip_address}")

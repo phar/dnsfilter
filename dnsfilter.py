@@ -62,17 +62,14 @@ class CustomResolver(BaseResolver):
 		# Return the DNS response
 		return reply
 
-	def is_subdomain_allowed(self, subdomain, allowed_domains):
-		# convert subdomain and allowed_domains to lowercase
-		subdomain = subdomain.lower()
-		allowed_domains = [d.lower() for d in allowed_domains]
+	def is_subdomain_allowed(self, subdomain, reference_list):
+		subdomain_parts = subdomain.split('.')
+		for i in range(len(subdomain_parts)):
+			current_subdomain = '.'.join(subdomain_parts[i:])
+			if current_subdomain in reference_list:
+				return True
+		return False
 
-		# get the highest level domain of the subdomain
-		parts = subdomain.split('.')
-		highest_level_domain = '.'.join(parts[-2:])
-
-		# check if the highest level domain is in the allowed_domains list
-		return highest_level_domain in allowed_domains
 		
 
 	def get_addr_list(self,domain_name):
