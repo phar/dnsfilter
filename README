@@ -7,5 +7,6 @@ https://localhost:5000/ to add/remove hosts.. i never bothered implementing remo
 
 there are no options.. there is no hope..
 
-
-
+cp dnsfilter.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable dnsfilter
