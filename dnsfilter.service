@@ -3,8 +3,8 @@ Description=prime-air test DNS filter service
 After=network.target
 
 [Service]
-ExecStart=/path/to/your/custom/service
-WorkingDirectory=/path/to/your/custom/service/directory
+ExecStart=/usr/bin/python3 %%INSTALLATION_PATH%%/dnsfilter.py
+WorkingDirectory=%%INSTALLATION_PATH%%/
 
 [Install]
 WantedBy=multi-user.target
